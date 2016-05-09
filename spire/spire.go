@@ -10,7 +10,7 @@ import "time"
 func GetDate(date string) {
 	token := os.Getenv("SPIRE_TOKEN")
 	response, err := http.Get("https://app.spire.io/api/events/br?access_token=" +
-		token + "&date=2016-05-05")
+		token + "&date=2016-05-04")
 
 	if err != nil {
 		fmt.Println(err)
@@ -40,6 +40,7 @@ func GetDate(date string) {
 		store[hour] = append(store[hour], value)
 	}
 
+	averages := make(map[int]float64)
 	for k, v := range store {
 		length := len(v)
 		sum := 0.0
@@ -47,6 +48,14 @@ func GetDate(date string) {
 			sum += val
 		}
 		avg := sum / float64(length)
-		fmt.Println(k, avg)
+		averages[k] = avg
+	}
+	hour := 0
+	for {
+		fmt.Println(hour, averages[hour])
+		hour++
+		if hour > 23 {
+			break
+		}
 	}
 }
