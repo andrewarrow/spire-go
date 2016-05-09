@@ -7,6 +7,11 @@ import "io/ioutil"
 import "encoding/json"
 import "time"
 
+type BreathPerMin struct {
+	ts    int64
+	value float64
+}
+
 func GetDate(datestr string) {
 	if len(datestr) != 10 {
 		fmt.Println("invalid date")
@@ -32,10 +37,13 @@ func GetDate(datestr string) {
 	store := make(map[int][]float64)
 
 	data := result["data"].([]interface{})
+	lastBPM := BreathPerMin{}
 	for _, raw := range data {
 		hash := raw.(map[string]interface{})
 		ts := int64(hash["timestamp"].(float64))
 		value := hash["value"].(float64)
+		lastBPM.ts = ts
+		lastBPM.value = value
 		date := time.Unix(ts, 0)
 		hour := date.Hour()
 		if store[hour] == nil {
@@ -62,4 +70,5 @@ func GetDate(datestr string) {
 			break
 		}
 	}
+	fmt.Println(lastBPM)
 }
