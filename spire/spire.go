@@ -12,11 +12,15 @@ type BreathPerMin struct {
 	value float64
 }
 
+var ListOfBPM []BreathPerMin
+
 func GetDate(datestr string) {
 	if len(datestr) != 10 {
 		fmt.Println("invalid date")
 		return
 	}
+	ListOfBPM = make([]BreathPerMin, 0)
+
 	token := os.Getenv("SPIRE_TOKEN")
 	response, err := http.Get("https://app.spire.io/api/events/br?access_token=" +
 		token + "&date=" + datestr)
@@ -44,6 +48,7 @@ func GetDate(datestr string) {
 		value := hash["value"].(float64)
 		lastBPM.ts = ts
 		lastBPM.value = value
+		ListOfBPM = append(ListOfBPM, lastBPM)
 		date := time.Unix(ts, 0)
 		hour := date.Hour()
 		if store[hour] == nil {
@@ -70,5 +75,14 @@ func GetDate(datestr string) {
 			break
 		}
 	}
-	fmt.Println(lastBPM)
+
+	total := len(ListOfBPM)
+	i := total - 10
+	for {
+		fmt.Println(ListOfBPM[i])
+		i++
+		if i >= total {
+			break
+		}
+	}
 }
