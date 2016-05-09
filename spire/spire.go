@@ -7,10 +7,14 @@ import "io/ioutil"
 import "encoding/json"
 import "time"
 
-func GetDate(date string) {
+func GetDate(datestr string) {
+	if len(datestr) != 10 {
+		fmt.Println("invalid date")
+		return
+	}
 	token := os.Getenv("SPIRE_TOKEN")
 	response, err := http.Get("https://app.spire.io/api/events/br?access_token=" +
-		token + "&date=2016-05-04")
+		token + "&date=" + datestr)
 
 	if err != nil {
 		fmt.Println(err)
