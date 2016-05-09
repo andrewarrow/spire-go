@@ -5,6 +5,7 @@ import "net/http"
 import "fmt"
 import "io/ioutil"
 import "encoding/json"
+import "time"
 
 func GetDate(date string) {
 	token := os.Getenv("SPIRE_TOKEN")
@@ -28,8 +29,10 @@ func GetDate(date string) {
 	data := result["data"].([]interface{})
 	for _, raw := range data {
 		hash := raw.(map[string]interface{})
-		ts := hash["timestamp"]
-		fmt.Println(ts)
+		ts := int64(hash["timestamp"].(float64))
+		value := hash["value"].(float64)
+		date := time.Unix(ts, 0)
+		fmt.Println(date, value)
 	}
 
 }
