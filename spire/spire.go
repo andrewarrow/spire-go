@@ -39,6 +39,14 @@ func GetDate(date string) {
 		}
 		store[hour] = append(store[hour], value)
 	}
-	fmt.Println(store)
 
+	for k, v := range store {
+		length := len(v)
+		sum := 0.0
+		for _, val := range v {
+			sum += val
+		}
+		avg := sum / float64(length)
+		fmt.Println(k, avg)
+	}
 }
