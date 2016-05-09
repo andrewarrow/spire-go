@@ -19,12 +19,13 @@ func GetDate(date string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(string(bytes))
 	result := make(map[string]interface{})
 	err = json.Unmarshal(bytes, &result)
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	store := make(map[int][]float64)
 
 	data := result["data"].([]interface{})
 	for _, raw := range data {
@@ -32,7 +33,12 @@ func GetDate(date string) {
 		ts := int64(hash["timestamp"].(float64))
 		value := hash["value"].(float64)
 		date := time.Unix(ts, 0)
-		fmt.Println(date, value)
+		hour := date.Hour()
+		if store[hour] == nil {
+			store[hour] = make([]float64, 0)
+		}
+		store[hour] = append(store[hour], value)
 	}
+	fmt.Println(store)
 
 }
